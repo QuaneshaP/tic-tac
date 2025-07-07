@@ -1,23 +1,55 @@
-const ticTac = (function (game, player) {
-     const gameboard = () =>{
-        let board = [];
-        const add = (marker) => board.push(marker);
-        const reset = () => {board.length = 0;};
+function Gameboard(){
+   const rows = 3;
+   const columns = 3;
+   const board = [];
 
-        return {add, reset};
-     };
+   for(let i = 0; i < rows; i++ ){
+      board[i] = [];
+      for(let j = 0; j < columns; j++){
+         board[i].push(Grid());
+      }
+   }
 
-     const players = (player) =>({
-        player
-     });
+   const getBoard = () => board;
+}
 
-     return { gameboard, players};
+function GameController (
+    playerOne = "Player One",
+    playerTwo = "Player Two"
+){
+   const players = [
+      {
+         name: playerOne,
+         token: "X"
+      },
+      {
+         name: playerTwo,
+         token: "O"
+      }
+   ]
 
-})();
+   let activePlayer = players[0];
 
-const board = ticTac.gameboard();
-const player1 = ticTac.players("player 1");
-board.add("x");
-console.log(board);
-console.log("hey");
-console.log(player1);
+   const switchPlayer = () =>{
+      activePlayer = activePlayer === players[0] ? players[1] : players[0];
+   };
+   
+   const getActivePlayer = () => activePlayer;
+
+   return {getActivePlayer, players};
+}
+
+function Grid(){
+   let value = "";
+
+   const addMarker = (player) => {
+      value = player;
+   }
+
+   const getValue = () => value;
+
+   return {
+      addMarker,
+      getValue
+   };
+}
