@@ -13,6 +13,10 @@ function Gameboard() {
     
     const dropToken = (row, column, token) => {
          board[row][column].push(token);
+         if (board[row][column].length !== 0 ){
+          alert("Please add your token into an empty space.");
+          return;
+         }
     }
    
     
@@ -52,7 +56,7 @@ function GameController (
     
 
     const playRound = () =>{
-      console.log(`Adding ${getActivePlayer().name}'s ${getActivePlayer().token}to the board`);
+      console.log(`Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`);
       let choiceRow = prompt(`${getActivePlayer().name} Select the row!`);
       let choiceCol = prompt(`${getActivePlayer().name} Select the column!`)
 
@@ -94,7 +98,8 @@ function GameController (
       const winner = checkWin(getActivePlayer().token);
 
       if(winner) {
-        console.log(`And the winner is :${getActivePlayer().name} congratulations!`);
+        console.log(`And the winner is :${getActivePlayer().name}! Congratulations!`);
+        board.printBoard();
         return; 
       }
      
