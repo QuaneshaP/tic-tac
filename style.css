@@ -1,0 +1,51 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: fantasy;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+.board-container{
+    display: grid;
+    height: 700px;
+    width: 600px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding-top: 100px;
+    justify-content: center;
+    
+  
+}
+.cell{
+    border: 1.2rem solid rgb(26, 25, 31);
+     background-color: white;
+    
+}
+.one {
+    border-top: none;
+}
+.uno {
+    border-left: none;
+}
+.tres{
+    border-right: none;
+}
+.dos{
+    border-bottom: none;
+    
+}
+.tic{
+    font-size: 3.5rem;
+}
+
+.score{
+    padding-top: 20px;
+}
+.cell.one.uno {
+    background-color: white;
+}
