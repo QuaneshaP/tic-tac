@@ -20,6 +20,7 @@ body{
     padding-top: 100px;
     justify-content: center;
     
+    
   
 }
 .cell{
@@ -47,4 +48,12 @@ body{
 
 .score{
     padding-top: 20px;
+}
+.reset{
+    height: 150px;
+    width: 200px;
+    border-radius: 4px;
+}
+.reset-con{
+    padding-top: 50px;
 }

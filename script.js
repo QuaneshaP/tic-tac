@@ -12,10 +12,27 @@ function Gameboard() {
     }
     
     const dropToken = (row, column, token) => {
-         board[row][column].push(token);
+      if(hasMarker(row, column)){
+          return;
+         }   
+      else{
+        board[row][column].push(token);
+      }   
+      
+         
          
     }
    
+    // Check if the board has already been filled.
+    const hasMarker = (a, b)=>{
+      if(board[a][b].length > 0){
+        return true;
+      }  
+      else{
+        return false;
+      }
+    }
+    
     
     const getBoard = () => board;
 
@@ -27,12 +44,13 @@ function Gameboard() {
       for (let i = 0; i < rows; i++) {
         const inner = [];
         for(let j = 0; j < columns; j++){
+          
             inner.push([]);
         }
       board.push(inner);    
     }
     }
-    return {dropToken, getBoard, printBoard, resetBoard };
+    return {dropToken, getBoard, printBoard, resetBoard, hasMarker};
     
     
     
@@ -69,6 +87,8 @@ function GameController (
       let player1_Score = 0;
       let player2_Score = 0;
 
+      let testBoard = board.getBoard();
+
       const checkWin = (token) =>{
           let winCheck = board.getBoard();
 
@@ -99,19 +119,39 @@ function GameController (
           }
           return false;
       };
+      
     
       
       let gameOver = false;
+
+      const checkDom = (a, b, c) =>{
+        if(board.hasMarker(a, b) && c.innerHTML !== ""){
+          return true;
+        }
+        return false;
+      };
       
-     
+      console.log(board.hasMarker(0, 0));
       
       domManuipulation.banner.innerHTML = "";
       domManuipulation.firstBtn.addEventListener("click", function(){
+       
         gameOver = false;
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(0, 0, getActivePlayer().token);
-        domManuipulation.firstBtn.innerHTML = "";
-        domManuipulation.firstBtn.innerHTML = `${getActivePlayer().token}`
+        if(checkDom(0, 0, this)){
+          domManuipulation.banner.innerHTML = "Please add your marker to an empty spot."; 
+        }
+
+        else{
+          domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
+          board.dropToken(0, 0, getActivePlayer().token);
+          domManuipulation.firstBtn.innerHTML = "";
+          domManuipulation.firstBtn.innerHTML = `${getActivePlayer().token}`;
+          switchPlayers();
+        
+          board.printBoard();
+
+        }
+        
 
         if(checkWin(getActivePlayer().token) && !gameOver){
           domManuipulation.banner.innerHTML = "";
@@ -130,13 +170,16 @@ function GameController (
           return; 
 
         }
-        else{
-          switchPlayers();
-        }
+
+          
+
+      
 
       });
       domManuipulation.secondBtn.addEventListener("click", function(){
         gameOver = false;
+        
+        
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(0, 1, getActivePlayer().token);
          domManuipulation.secondBtn.textContent = "";
@@ -161,13 +204,21 @@ function GameController (
 
         }
         else{
+          if(board.hasMarker(0, 0)){
+          domManuipulation.banner.innerHTML = "Please add your marker to an empty spot.";
+          board.printBoard();
+          console.log(board.hasMarker(0, 0));
+          
           switchPlayers();
+          }
+          
         }
         
         
       });
       domManuipulation.thirdBtn.addEventListener("click", function(){
         gameOver = false;
+      
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(0, 2, getActivePlayer().token);
         domManuipulation.thirdBtn.textContent = "";
@@ -191,12 +242,15 @@ function GameController (
 
         }
         else{
+          
+          
           switchPlayers();
         }
 
       });
        domManuipulation.fourthBtn.addEventListener("click", function(){
         gameOver = false;
+     
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(1, 0, getActivePlayer().token);
         domManuipulation.fourthBtn.textContent = "";
@@ -226,6 +280,7 @@ function GameController (
       });
       domManuipulation.fifthBtn.addEventListener("click", function(){
         gameOver = false;
+        
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(1, 1, getActivePlayer().token);
         domManuipulation.fifthBtn.textContent = "";
@@ -255,6 +310,7 @@ function GameController (
       });
       domManuipulation.sixBtn.addEventListener("click", function(){
         gameOver = false;
+        
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(1, 2, getActivePlayer().token);
         domManuipulation.sixBtn.textContent = "";
@@ -284,6 +340,7 @@ function GameController (
       });
        domManuipulation.sevenBtn.addEventListener("click", function(){
         gameOver = false;
+    
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(2, 0, getActivePlayer().token);
         domManuipulation.sevenBtn.textContent = "";
@@ -313,6 +370,7 @@ function GameController (
       });
        domManuipulation.eightBtn.addEventListener("click", function(){
         gameOver = false;
+       
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(2, 1, getActivePlayer().token);
         domManuipulation.eightBtn.textContent = "";
@@ -344,6 +402,7 @@ function GameController (
       });
        domManuipulation.nineBtn.addEventListener("click", function(){
         gameOver = false;
+       
         domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
         board.dropToken(2, 2, getActivePlayer().token);
         domManuipulation.nineBtn.textContent = "";
