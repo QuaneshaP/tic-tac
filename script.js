@@ -61,6 +61,7 @@ function GameController (
 
    const board = Gameboard();
     
+    
     const players = [
         { name: playerOneName,
           token: "X"
@@ -88,6 +89,19 @@ function GameController (
       let player2_Score = 0;
 
       let testBoard = board.getBoard();
+
+      const checkTie = () =>{
+        let tieCheck = board.getBoard();
+        let count = 0;
+        for (let i = 0; i < 3; i++) {
+          for(let j = 0; j < 3; j++){
+            if(tieCheck[i][j].length > 0){
+              ++count;
+            }
+          }
+        }
+        return count === 9;
+      }
 
       const checkWin = (token) =>{
           let winCheck = board.getBoard();
@@ -120,7 +134,6 @@ function GameController (
           return false;
       };
       
-    
       
       let gameOver = false;
 
@@ -131,344 +144,97 @@ function GameController (
         return false;
       };
       
-      console.log(board.hasMarker(0, 0));
-      
-      domManuipulation.banner.innerHTML = "";
-      domManuipulation.firstBtn.addEventListener("click", function(){
-       
-        gameOver = false;
-        if(checkDom(0, 0, this)){
-          domManuipulation.banner.innerHTML = "Please add your marker to an empty spot."; 
-        }
-
-        else{
-          domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-          board.dropToken(0, 0, getActivePlayer().token);
-          domManuipulation.firstBtn.innerHTML = "";
-          domManuipulation.firstBtn.innerHTML = `${getActivePlayer().token}`;
-          switchPlayers();
-        
-          board.printBoard();
-
-        }
-        
-
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          return; 
-
-        }
-
-          
-
       
 
-      });
-      domManuipulation.secondBtn.addEventListener("click", function(){
-        gameOver = false;
-        
-        
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(0, 1, getActivePlayer().token);
-         domManuipulation.secondBtn.textContent = "";
-        domManuipulation.secondBtn.textContent = `${getActivePlayer().token}`
-
-        if(checkWin(getActivePlayer().token) && !gameOver){
+      //Adds event listeners for all buttons on the DOM
+      for(let row = 0; row < 3; row++){
+        for(let col = 0; col < 3; col++){
           domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          
-          return; 
+          const button = domManuipulation.buttons[row][col];
+          button.addEventListener("click", function(){
+            gameOver = false;
+            if(checkDom(row, col, this)){
+              domManuipulation.banner.innerHTML = "Please add your marker to an empty spot.";
+              return; 
+            }
+            else{
+              domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
+              board.dropToken(row, col, getActivePlayer().token);
+              this.innerHTML = "";
+              this.innerHTML = `${getActivePlayer().token}`;
+              
+            
+              board.printBoard();
 
-        }
-        else{
-          if(board.hasMarker(0, 0)){
-          domManuipulation.banner.innerHTML = "Please add your marker to an empty spot.";
-          board.printBoard();
-          console.log(board.hasMarker(0, 0));
-          
-          switchPlayers();
-          }
-          
-        }
-        
-        
-      });
-      domManuipulation.thirdBtn.addEventListener("click", function(){
-        gameOver = false;
-      
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(0, 2, getActivePlayer().token);
-        domManuipulation.thirdBtn.textContent = "";
-        domManuipulation.thirdBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          return; 
+            }
+             if(checkWin(getActivePlayer().token) && !gameOver){
+              domManuipulation.banner.innerHTML = "";
+              domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
+              board.printBoard();
+              if(getActivePlayer().name === "Player One"){
+              ++player1_Score;
+              domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
+              }
+              else if(getActivePlayer().name === "Player Two"){
+                ++player2_Score;
+                domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
+              }
+              gameOver = true;
+              board.resetBoard();
+              return; 
 
+            }
+            else if(!checkWin(getActivePlayer().token) && checkTie()){
+              domManuipulation.banner.innerHTML = "";
+              domManuipulation.banner.innerHTML = "It is a draw!";
+              
+            }
+            switchPlayers();
+            console.log(checkWin(getActivePlayer().token));
+          });
         }
-        else{
-          
-          
-          switchPlayers();
-        }
-
-      });
-       domManuipulation.fourthBtn.addEventListener("click", function(){
-        gameOver = false;
-     
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(1, 0, getActivePlayer().token);
-        domManuipulation.fourthBtn.textContent = "";
-        domManuipulation.fourthBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-      domManuipulation.fifthBtn.addEventListener("click", function(){
-        gameOver = false;
-        
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(1, 1, getActivePlayer().token);
-        domManuipulation.fifthBtn.textContent = "";
-        domManuipulation.fifthBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-      domManuipulation.sixBtn.addEventListener("click", function(){
-        gameOver = false;
-        
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(1, 2, getActivePlayer().token);
-        domManuipulation.sixBtn.textContent = "";
-        domManuipulation.sixBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard();
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-       domManuipulation.sevenBtn.addEventListener("click", function(){
-        gameOver = false;
-    
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(2, 0, getActivePlayer().token);
-        domManuipulation.sevenBtn.textContent = "";
-        domManuipulation.sevenBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard(); 
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-       domManuipulation.eightBtn.addEventListener("click", function(){
-        gameOver = false;
-       
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(2, 1, getActivePlayer().token);
-        domManuipulation.eightBtn.textContent = "";
-        domManuipulation.eightBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-
-          gameOver = true;
-          board.resetBoard(); 
-         
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-       domManuipulation.nineBtn.addEventListener("click", function(){
-        gameOver = false;
-       
-        domManuipulation.banner.innerHTML = `Adding ${getActivePlayer().name}'s ${getActivePlayer().token} to the board`;
-        board.dropToken(2, 2, getActivePlayer().token);
-        domManuipulation.nineBtn.textContent = "";
-        domManuipulation.nineBtn.textContent = `${getActivePlayer().token}`
-        
-        if(checkWin(getActivePlayer().token) && !gameOver){
-          domManuipulation.banner.innerHTML = "";
-          domManuipulation.banner.innerHTML = `And the winner is: ${getActivePlayer().name}! Congratulations!`;
-          board.printBoard();
-          if(getActivePlayer().name === "Player One"){
-          ++player1_Score;
-          domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
-          }
-          else if(getActivePlayer().name === "Player Two"){
-            ++player2_Score;
-            domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
-          }
-          gameOver = true;
-          board.resetBoard(); 
-          return; 
-
-        }
-        else{
-          switchPlayers();
-        }
-
-      });
-      
+      }
+      // Reset the dom and board via reset button
       domManuipulation.reset.addEventListener("click", function(){
         domManuipulation.resetDom();
         board.resetBoard();
-        board.printBoard();
-      })
+      });
 
-      
-      
+      domManuipulation.Resetscore.addEventListener("click", function(){
+        domManuipulation.resetScore();
+      });
+
+     
 
     
       board.printBoard();
     }
     
+    // Holds all Dom objects
     const domManuipulation = {
       scoreBoard: document.querySelector(".score"),
-      firstBtn: document.querySelector(".first"),
-      secondBtn: document.querySelector(".second"),
-      thirdBtn: document.querySelector(".third"),
-      fourthBtn: document.querySelector(".fourth"),
-      fifthBtn: document.querySelector(".fifth"),
-      sixBtn: document.querySelector(".six"),
-      sevenBtn: document.querySelector(".seven"),
-      eightBtn: document.querySelector(".eight"),
-      nineBtn: document.querySelector(".nine"),
       banner: document.querySelector(".banner"),
       reset: document.querySelector(".reset"),
+      Resetscore: document.querySelector(".scores"),
       resetDom: function() {
-         this.firstBtn.textContent = "";
-         this.secondBtn.textContent = '';
-         this.thirdBtn.textContent = "";
-         this.fourthBtn.textContent = "";
-         this.fifthBtn.textContent = "";
-         this.sixBtn.textContent = "";
-         this.sevenBtn.textContent = "";
-         this.eightBtn.textContent = "";
-         this.nineBtn.textContent = "";
-      }
+        this.banner.innerHTML = "Resetting Board";
+        for (let row of this.buttons){
+          for(let btn of row){
+            btn.textContent = "";
+          }
+        }
+      },
+    buttons: [
+      [document.querySelector(".first"),  document.querySelector(".second"), document.querySelector(".third")],
+      [document.querySelector(".fourth"), document.querySelector(".fifth"), document.querySelector(".six")],
+      [document.querySelector(".seven"), document.querySelector(".eight"), document.querySelector(".nine"),]
+    ],
+    resetScore: function(){
+      player1_Score = 0;
+      player2_Score = 0;
+      this.scoreBoard.textContent = `Resetting Score: Player One: ${player1_Score} Player Two: ${player2_Score}`;
     }
+    };
     return {
       playRound,
       getActivePlayer,

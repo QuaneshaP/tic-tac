@@ -51,9 +51,23 @@ body{
 }
 .reset{
     height: 150px;
-    width: 200px;
+    width: 300px;
     border-radius: 4px;
+    font-size: 1.5rem;
+    background-color: coral;
+    border: white;
 }
-.reset-con{
+
+.player-container{
+    display: flex;
     padding-top: 50px;
+    padding-bottom: 50px;
+    gap: 22px;
+    font-size: 1.5rem;
+}
+
+.reset-btn{
+    display: flex;
+    padding-top: 50px;
+    gap: 30px;
 }
