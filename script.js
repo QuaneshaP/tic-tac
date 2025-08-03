@@ -55,18 +55,39 @@ function Gameboard() {
     
     
 }
+
+function Names(){
+  const player1Name = document.querySelector(".playerOne");
+  const player2Name = document.querySelector(".playerTwo");
+
+  const getPlayerOne = () => player1Name;
+  const getPlayerTwo = () => player2Name;
+
+
+
+  return {getPlayerOne, getPlayerTwo};
+}
+
 function GameController (
     playerOneName = "Player One", 
     playerTwoName = "Player Two") {
 
    const board = Gameboard();
+
+   const userNames = Names();
+   
+
+   const p1Name = userNames.getPlayerOne().value;
+   const p2Name = userNames.getPlayerTwo().value; 
+   
+  
     
     
     const players = [
-        { name: playerOneName,
+        { name: p1Name,
           token: "X"
         },
-        { name: playerTwoName,
+        { name: p2Name,
          token: "O"
         }
     ];
@@ -171,13 +192,13 @@ function GameController (
               domManuipulation.banner.innerHTML = "";
               domManuipulation.banner.innerHTML = `And the winner is :${getActivePlayer().name}! Congratulations!`;
               board.printBoard();
-              if(getActivePlayer().name === "Player One"){
+              if(getActivePlayer().name === p1Name){
               ++player1_Score;
-              domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`;
+              domManuipulation.scoreBoard.textContent = `Scoreboard: ${p1Name}: ${player1_Score} ${p2Name}: ${player2_Score}`;
               }
-              else if(getActivePlayer().name === "Player Two"){
+              else if(getActivePlayer().name === p2Name){
                 ++player2_Score;
-                domManuipulation.scoreBoard.textContent = `Player One: ${player1_Score} Player Two: ${player2_Score}`
+                domManuipulation.scoreBoard.textContent = `Scoreboard: ${p1Name} ${player1_Score} ${p2Name}: ${player2_Score}`
               }
               gameOver = true;
               board.resetBoard();
